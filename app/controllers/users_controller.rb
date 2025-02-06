@@ -1,5 +1,4 @@
-class UsersController < ApplicationController
-  # protect_from_forgery with: :null_session
+class UsersController < ApplicationController 
   before_action :set_user, only: [:show, :update, :destroy]
 
   def index

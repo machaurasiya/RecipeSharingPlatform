@@ -1,3 +1,5 @@
 class Tag < ApplicationRecord
-    has_many :recipes
+  include Searchable
+  
+  has_many :recipes
 end
