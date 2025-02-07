@@ -1,6 +1,6 @@
 class RatingsController < ApplicationController
-    before_action :set_recipe
-    before_action :set_rating, only: [:show, :update, :destroy]
+  before_action :set_recipe
+  before_action :set_rating, only: [:show, :update, :destroy]
 
   def index
     @ratings = @recipe.ratings.all
