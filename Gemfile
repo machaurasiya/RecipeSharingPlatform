@@ -50,6 +50,8 @@ group :development, :test do
 end
 
 gem 'cancancan'
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]

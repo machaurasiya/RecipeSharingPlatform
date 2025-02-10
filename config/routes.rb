@@ -1,10 +1,15 @@
 Rails.application.routes.draw do
 
   resources :users
-  resources :tags
+
+  resources :tags do
+    resources :recipes, only: [:index]
+  end
 
   resources :recipes do
-    resources :ingredients, only: [:index, :show]
+    resources :comments
+    resources :ratings
+    resources :ingredients
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

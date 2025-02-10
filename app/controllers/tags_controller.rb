@@ -1,8 +1,9 @@
 class TagsController < ApplicationController
-  before_action :set_tag, only: [:show]
+  before_action :set_tag, only: [:show, :update, :destroy]
   
   def index
-    @tags = Tag.all
+    # @tags = Tag.all
+    @tags = params[:q].present? ? Tag.search(params[:q]) : Tag.all
 
     render json: @tags
   end
@@ -19,6 +20,18 @@ class TagsController < ApplicationController
     else
       render json: @tag.errors, status: :unprocessable_entity
     end
+  end
+
+  def update
+    if @tag.update(tag_params)
+      render json: @tag
+    else
+      render json: @tag.errors, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @tag.destroy
   end
 
   private
