@@ -1,23 +1,24 @@
 class UsersController < ApplicationController 
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :authorize_request, except: :create
+  before_action :set_user, except: %i[create index]
 
   def index
     @users = User.all
 
-    render json: @users
+    render json: @users, status: :ok
   end
 
   def show
-    render json: @user
+    render json: @user, status: :ok
   end
 
   def create
     @user = User.new(user_params)
 
     if @user.save
-      render json: @user, status: :created, location: @user
+      render json: @user, status: :created
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -25,7 +26,7 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       render json: @user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -37,6 +38,8 @@ class UsersController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: { errors: 'User not found' }, status: :not_found
   end
 
   def user_params

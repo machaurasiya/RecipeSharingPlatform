@@ -1,4 +1,6 @@
 class TagsController < ApplicationController
+  before_action :authorize_request
+  load_and_authorize_resource
   before_action :set_tag, only: [:show, :update, :destroy]
   
   def index
@@ -13,7 +15,7 @@ class TagsController < ApplicationController
   end
 
   def create
-    @tag = Tag.new(tag_params)
+    @tag = current_user.tags.new(tag_params)
 
     if @tag.save
       render json: @tag, status: :created, location: @tag
@@ -41,6 +43,6 @@ class TagsController < ApplicationController
   end
 
   def tag_params
-    params.require(:tag).permit(:tag_name)
+    params.require(:tag).permit(:user_id, :tag_name)
   end
 end

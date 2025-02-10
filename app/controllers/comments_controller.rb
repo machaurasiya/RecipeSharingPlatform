@@ -1,6 +1,8 @@
 class CommentsController < ApplicationController
-    before_action :set_recipe
-    before_action :set_comment, only: [:show, :update, :destroy]
+  before_action :authorize_request
+  load_and_authorize_resource
+  before_action :set_recipe
+  before_action :set_comment, only: [:show, :update, :destroy]
 
   def index
     @comments = @recipe.comments.all
@@ -14,6 +16,7 @@ class CommentsController < ApplicationController
 
   def create
     @comment = @recipe.comments.new(comment_params)
+    @comment.user = current_user
 
     if @comment.save
       render json: @comment, status: :created, location: recipe_comment_url(@recipe, @comment)
