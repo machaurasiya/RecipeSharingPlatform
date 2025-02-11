@@ -1,8 +1,10 @@
 class RecipesController < ApplicationController
-  include Rails.application.routes.url_helpers
-  # load_and_authorize_resource
-  # authorize_resource class: false
+  before_action :authorize_request
+  load_and_authorize_resource
+  # before_action :set_user
   before_action :set_recipe, only: [:show, :update, :destroy]
+
+  include Rails.application.routes.url_helpers
 
   def index
     @recipes = if params[:q].present?
@@ -26,7 +28,8 @@ class RecipesController < ApplicationController
   end
 
   def create
-    @recipe = Recipe.new(recipe_params)
+    # @recipe = Recipe.new(recipe_params)
+    @recipe = current_user.recipes.new(recipe_params)
 
     if params[:recipe][:recipe_images].present?
       images = params[:recipe][:recipe_images].is_a?(Array) ? params[:recipe][:recipe_images] : [params[:recipe][:recipe_images]]
@@ -44,6 +47,8 @@ class RecipesController < ApplicationController
   end
 
   def update
+    authorize! :update, @recipe
+
     if @recipe.update(recipe_params)
 
       if params[:recipe][:recipe_images].present?
@@ -60,10 +65,16 @@ class RecipesController < ApplicationController
   end
 
   def destroy
+    authorize! :destroy, @recipe
+    
     @recipe.destroy
   end
 
   private
+
+  # def set_user
+  #   @user = current_user.id
+  # end
 
    def set_recipe
     @recipe = Recipe.find(params[:id])

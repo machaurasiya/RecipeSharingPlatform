@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-
   resources :users
+  post '/auth/login', to: 'authentication#login'
 
   resources :tags do
     resources :recipes, only: [:index]

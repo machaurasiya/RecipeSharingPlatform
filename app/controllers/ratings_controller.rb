@@ -1,4 +1,6 @@
 class RatingsController < ApplicationController
+  before_action :authorize_request
+  load_and_authorize_resource
   before_action :set_recipe
   before_action :set_rating, only: [:show, :update, :destroy]
 
@@ -14,6 +16,7 @@ class RatingsController < ApplicationController
 
   def create
     @rating = @recipe.ratings.new(rating_params)
+    @rating.user = current_user
 
     if @rating.save
         render json: @rating, status: :created, location: recipe_rating_url(@recipe, @rating)

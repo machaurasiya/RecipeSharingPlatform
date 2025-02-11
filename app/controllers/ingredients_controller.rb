@@ -1,4 +1,6 @@
 class IngredientsController < ApplicationController
+  before_action :authorize_request
+  load_and_authorize_resource
   before_action :set_recipe
   before_action :set_ingredient, only: [:show, :update, :destroy]
 
